@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package redes2;
+package redes2criptografia;
 
 /**
  *
- * @author alexandracarvalho
+ * @author ximen
  */
-public class Redes2 {
+public class Redes2Criptografia {
 
     /**
      * @param args the command line arguments
