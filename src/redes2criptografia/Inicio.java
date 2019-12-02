@@ -5,6 +5,7 @@
  */
 package redes2criptografia;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -168,14 +169,22 @@ public class Inicio extends javax.swing.JFrame {
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            ImageIcon iconImagem = new ImageIcon(fileChooser.getSelectedFile().getPath());
             File fileImagem = new File(fileChooser.getSelectedFile().getPath());
-            lblImagem.setIcon((Icon) fileImagem);
+            Color color;
+            lblImagem.setIcon(iconImagem);
             try {
                 bufferImagem = ImageIO.read(fileImagem);
+                for(int i=0;i<bufferImagem.getWidth();i++){
+                    for(int j=0; j<bufferImagem.getHeight();j++){
+                        color = new Color(bufferImagem.getRGB(i, j));
+                        System.out.println(color);
+                    }
+                }
             } catch (IOException ex) {
                 Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println("bufferImagem");
+            System.out.println(bufferImagem);
         }
     }//GEN-LAST:event_btnCarregarArquivoActionPerformed
 
