@@ -9,8 +9,13 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -22,6 +27,12 @@ import javax.swing.filechooser.FileSystemView;
  * @author ximen
  */
 public class Inicio extends javax.swing.JFrame {
+
+    boolean flagCifraCesar = true;
+    boolean flagCifraXOR = true;
+    boolean flagSDES = true;
+    BufferedImage bufferImagem;
+    Raster rasterImagem;
 
     /**
      * Creates new form Inicio
@@ -68,11 +79,26 @@ public class Inicio extends javax.swing.JFrame {
         );
 
         btnCifraDeCesar.setText("Cifra de Cesar");
+        btnCifraDeCesar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCifraDeCesarActionPerformed(evt);
+            }
+        });
 
         btnCifraXOR.setText("Cifra XOR");
         btnCifraXOR.setActionCommand("");
+        btnCifraXOR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCifraXORActionPerformed(evt);
+            }
+        });
 
         btnSDes.setText("S-DES");
+        btnSDes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSDesActionPerformed(evt);
+            }
+        });
 
         btnCarregarArquivo.setText("Carregar Arquivo");
         btnCarregarArquivo.addActionListener(new java.awt.event.ActionListener() {
@@ -85,22 +111,21 @@ public class Inicio extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(46, 46, 46)
-                .addComponent(btnCifraDeCesar)
-                .addGap(94, 94, 94)
-                .addComponent(btnCifraXOR)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
-                .addComponent(btnSDes)
-                .addGap(45, 45, 45))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnCarregarArquivo)
                 .addGap(37, 37, 37))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnCifraDeCesar)
+                        .addGap(116, 116, 116)
+                        .addComponent(btnCifraXOR)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
+                        .addComponent(btnSDes)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -114,7 +139,7 @@ public class Inicio extends javax.swing.JFrame {
                     .addComponent(btnCifraDeCesar)
                     .addComponent(btnCifraXOR)
                     .addComponent(btnSDes))
-                .addContainerGap(77, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -130,26 +155,70 @@ public class Inicio extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(77, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCarregarArquivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCarregarArquivoActionPerformed
-        System.out.println("Teste");
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Importar imagem");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-           // lblImagem.setIcon(new ImageIcon(fileChooser.getSelectedFile().getPath()));
-            lblImagem.setIcon(new ImageIcon(fileChooser.getSelectedFile().getPath()));
-            // lblImagem.setVisible(true);
+            File fileImagem = new File(fileChooser.getSelectedFile().getPath());
+            lblImagem.setIcon((Icon) fileImagem);
+            try {
+                bufferImagem = ImageIO.read(fileImagem);
+            } catch (IOException ex) {
+                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            System.out.println("bufferImagem");
         }
     }//GEN-LAST:event_btnCarregarArquivoActionPerformed
 
+    private void btnCifraXORActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCifraXORActionPerformed
+        if (flagCifraXOR) {
+            //Criptografar 
+            btnCifraDeCesar.setEnabled(false);
+            btnSDes.setEnabled(false);
+            flagCifraXOR = false;
+        } else {
+            //Desincriptografar
+            btnCifraDeCesar.setEnabled(true);
+            btnSDes.setEnabled(true);
+            flagCifraXOR = true;
+        }
+    }//GEN-LAST:event_btnCifraXORActionPerformed
+
+    private void btnCifraDeCesarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCifraDeCesarActionPerformed
+        if (flagCifraCesar) {
+            //Criptografar
+            btnCifraXOR.setEnabled(false);
+            btnSDes.setEnabled(false);
+            flagCifraCesar = false;
+        } else {
+            //Desincriptografar
+            btnCifraXOR.setEnabled(true);
+            btnSDes.setEnabled(true);
+            flagCifraCesar = true;
+        }
+    }//GEN-LAST:event_btnCifraDeCesarActionPerformed
+    private void btnSDesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSDesActionPerformed
+        if (flagSDES) {
+            //Criptografar 
+            btnCifraDeCesar.setEnabled(false);
+            btnCifraXOR.setEnabled(false);
+            flagSDES = false;
+        } else {
+            //Desincriptografar
+            btnCifraDeCesar.setEnabled(true);
+            btnCifraXOR.setEnabled(true);
+            flagSDES = true;
+        }
+    }//GEN-LAST:event_btnSDesActionPerformed
     /**
      * @param args the command line arguments
      */
