@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -33,6 +34,8 @@ public class Inicio extends javax.swing.JFrame {
     boolean flagCifraXOR = true;
     boolean flagSDES = true;
     BufferedImage bufferImagem;
+    BufferedImage aux;
+
     Raster rasterImagem;
 
     /**
@@ -43,7 +46,6 @@ public class Inicio extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setSize(700, 550);
         jPanel1.setSize(700, 550);
-        btnCifraDeCesar.setLocation(30, 585);
     }
 
     /**
@@ -170,6 +172,8 @@ public class Inicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCarregarArquivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCarregarArquivoActionPerformed
+        Random gerador = new Random();
+        int randomico = gerador.nextInt(255)+1;
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Importar imagem");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -178,19 +182,45 @@ public class Inicio extends javax.swing.JFrame {
             ImageIcon iconImagem = new ImageIcon(fileChooser.getSelectedFile().getPath());
             File fileImagem = new File(fileChooser.getSelectedFile().getPath());
             Color color;
+            int testeCor;
             lblImagem.setIcon(iconImagem);
             try {
                 bufferImagem = ImageIO.read(fileImagem);
-                for(int i=0;i<bufferImagem.getWidth();i++){
-                    for(int j=0; j<bufferImagem.getHeight();j++){
+                for (int i = 0; i < bufferImagem.getWidth(); i++) {
+                    for (int j = 0; j < bufferImagem.getHeight(); j++) {
                         color = new Color(bufferImagem.getRGB(i, j));
-                        System.out.println(color);
+                        testeCor = bufferImagem.getRGB(i, j);
+                       /* int r1 = (int) ((testeCor & 0x00FF0000) >>> 16); //R
+                        int g1 = (int) ((testeCor & 0x0000FF00) >>> 8);  //G
+                        int b1 = (int) (testeCor & 0x000000FF);
+                        int r = (int) ((testeCor & 0x00FF0000) >>> 16)+randomico; //R
+                        int g = (int) ((testeCor & 0x0000FF00) >>> 8)+randomico;  //G
+                        int b = (int) (testeCor & 0x000000FF)+randomico;       //B
+                        //System.out.println(color);
+                       */
+                        bufferImagem.setRGB(i, j, testeCor+randomico);
+                        
+                        
+                       /* System.out.print(testeCor);
+                        System.out.printf("\nRed: %d", r1);
+                        System.out.printf("\nGreen: %d", g1);
+                        System.out.printf("\nBlue: %d",b1);
+             
+                        System.out.printf("\nRed: %d", r);
+                        System.out.printf("\nGreen: %d", g);
+                        System.out.printf("\nBlue: %d",b);
+                       // System.out.printf("\n%x\n", testeCor);*/
                     }
                 }
             } catch (IOException ex) {
                 Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println(bufferImagem);
+           // System.out.println(bufferImagem);
+            try {
+                ImageIO.write(bufferImagem, "PNG", new File ("teste.png"));
+            } catch (IOException ex) {
+                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_btnCarregarArquivoActionPerformed
 
