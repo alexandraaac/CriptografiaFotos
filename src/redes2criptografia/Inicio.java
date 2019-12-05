@@ -183,7 +183,7 @@ public class Inicio extends javax.swing.JFrame {
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             iconImagem = new ImageIcon(fileChooser.getSelectedFile().getPath());
             fileImagem = new File(fileChooser.getSelectedFile().getPath());
-            randomico = gerador.nextInt(256) + 1;
+            randomico = gerador.nextInt(255) + 1;
             lblImagem.setIcon(iconImagem);
         }
     }//GEN-LAST:event_btnCarregarArquivoActionPerformed
@@ -194,6 +194,7 @@ public class Inicio extends javax.swing.JFrame {
             btnCifraDeCesar.setEnabled(false);
             btnSDes.setEnabled(false);
             flagCifraXOR = false;
+            
         } else {
             //Desincriptografar
             btnCifraDeCesar.setEnabled(true);
@@ -220,19 +221,16 @@ public class Inicio extends javax.swing.JFrame {
                         int red = color.getRed() + randomico;    //R
                         int green = color.getGreen() + randomico;  //G
                         int blue = color.getBlue() + randomico;   //B
-
-                        if (red >= 255) {
+                        if (red > 255) {
                             red = red % 255;
                         }
-                        if (green >= 255) {
+                        if (green > 255) {
                             green = green % 255;
                         }
-                        if (blue >= 255) {
+                        if (blue > 255) {
                             blue = blue % 255;
                         }
-
                         bufferImagem.setRGB(i, j, new Color(red, green, blue).getRGB());
-
                     }
                 }
             } catch (IOException ex) {
@@ -266,13 +264,13 @@ public class Inicio extends javax.swing.JFrame {
                         int green = color.getGreen() - randomico;  //G
                         int blue = color.getBlue() - randomico;   //B
 
-                        if (red <= 0) {
+                        if (red < 0) {
                             red = red + 255;
                         }
-                        if (green <= 0) {
+                        if (green < 0) {
                             green = green + 255;
                         }
-                        if (blue <= 0) {
+                        if (blue < 0) {
                             blue = blue + 255;
                         }
 
