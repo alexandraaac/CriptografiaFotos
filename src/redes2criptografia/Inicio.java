@@ -34,7 +34,12 @@ public class Inicio extends javax.swing.JFrame {
     boolean flagCifraXOR = true;
     boolean flagSDES = true;
     BufferedImage bufferImagem;
-    BufferedImage aux;
+    JFileChooser fileChooser = new JFileChooser();
+    Random gerador = new Random();
+    Color color;
+    int randomico;
+    File fileImagem;
+    ImageIcon iconImagem;
 
     Raster rasterImagem;
 
@@ -172,55 +177,14 @@ public class Inicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCarregarArquivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCarregarArquivoActionPerformed
-        Random gerador = new Random();
-        int randomico = gerador.nextInt(255)+1;
-        JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Importar imagem");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            ImageIcon iconImagem = new ImageIcon(fileChooser.getSelectedFile().getPath());
-            File fileImagem = new File(fileChooser.getSelectedFile().getPath());
-            Color color;
-            int testeCor;
+            iconImagem = new ImageIcon(fileChooser.getSelectedFile().getPath());
+            fileImagem = new File(fileChooser.getSelectedFile().getPath());
+            randomico = gerador.nextInt(256) + 1;
             lblImagem.setIcon(iconImagem);
-            try {
-                bufferImagem = ImageIO.read(fileImagem);
-                for (int i = 0; i < bufferImagem.getWidth(); i++) {
-                    for (int j = 0; j < bufferImagem.getHeight(); j++) {
-                        color = new Color(bufferImagem.getRGB(i, j));
-                        testeCor = bufferImagem.getRGB(i, j);
-                       /* int r1 = (int) ((testeCor & 0x00FF0000) >>> 16); //R
-                        int g1 = (int) ((testeCor & 0x0000FF00) >>> 8);  //G
-                        int b1 = (int) (testeCor & 0x000000FF);
-                        int r = (int) ((testeCor & 0x00FF0000) >>> 16)+randomico; //R
-                        int g = (int) ((testeCor & 0x0000FF00) >>> 8)+randomico;  //G
-                        int b = (int) (testeCor & 0x000000FF)+randomico;       //B
-                        //System.out.println(color);
-                       */
-                        bufferImagem.setRGB(i, j, testeCor+randomico);
-                        
-                        
-                       /* System.out.print(testeCor);
-                        System.out.printf("\nRed: %d", r1);
-                        System.out.printf("\nGreen: %d", g1);
-                        System.out.printf("\nBlue: %d",b1);
-             
-                        System.out.printf("\nRed: %d", r);
-                        System.out.printf("\nGreen: %d", g);
-                        System.out.printf("\nBlue: %d",b);
-                       // System.out.printf("\n%x\n", testeCor);*/
-                    }
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
-            }
-           // System.out.println(bufferImagem);
-            try {
-                ImageIO.write(bufferImagem, "PNG", new File ("teste.png"));
-            } catch (IOException ex) {
-                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }//GEN-LAST:event_btnCarregarArquivoActionPerformed
 
@@ -239,16 +203,96 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCifraXORActionPerformed
 
     private void btnCifraDeCesarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCifraDeCesarActionPerformed
+
         if (flagCifraCesar) {
             //Criptografar
             btnCifraXOR.setEnabled(false);
             btnSDes.setEnabled(false);
             flagCifraCesar = false;
+
+            System.out.println(randomico);
+            try {
+                bufferImagem = ImageIO.read(fileImagem);
+                for (int i = 0; i < bufferImagem.getWidth(); i++) {
+                    for (int j = 0; j < bufferImagem.getHeight(); j++) {
+                        color = new Color(bufferImagem.getRGB(i, j));
+
+                        int red = color.getRed() + randomico;    //R
+                        int green = color.getGreen() + randomico;  //G
+                        int blue = color.getBlue() + randomico;   //B
+
+                        if (red >= 255) {
+                            red = red % 255;
+                        }
+                        if (green >= 255) {
+                            green = green % 255;
+                        }
+                        if (blue >= 255) {
+                            blue = blue % 255;
+                        }
+
+                        bufferImagem.setRGB(i, j, new Color(red, green, blue).getRGB());
+
+                    }
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            // System.out.println(bufferImagem);
+            try {
+                ImageIO.write(bufferImagem, "PNG", new File("CriptografouCesar.png"));
+            } catch (IOException ex) {
+                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            iconImagem = new ImageIcon("CriptografouCesar.png");
+            lblImagem.setIcon(iconImagem);
+            System.out.println("Final Criptografia");
+
         } else {
             //Desincriptografar
             btnCifraXOR.setEnabled(true);
             btnSDes.setEnabled(true);
             flagCifraCesar = true;
+
+            try {
+                fileImagem = new File("CriptografouCesar.png");
+                bufferImagem = ImageIO.read(fileImagem);
+                for (int i = 0; i < bufferImagem.getWidth(); i++) {
+                    for (int j = 0; j < bufferImagem.getHeight(); j++) {
+                        color = new Color(bufferImagem.getRGB(i, j));
+
+                        int red = color.getRed() - randomico;    //R
+                        int green = color.getGreen() - randomico;  //G
+                        int blue = color.getBlue() - randomico;   //B
+
+                        if (red <= 0) {
+                            red = red + 255;
+                        }
+                        if (green <= 0) {
+                            green = green + 255;
+                        }
+                        if (blue <= 0) {
+                            blue = blue + 255;
+                        }
+
+                        bufferImagem.setRGB(i, j, new Color(red, green, blue).getRGB());
+
+                    }
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            // System.out.println(bufferImagem);
+            try {
+                ImageIO.write(bufferImagem, "PNG", new File("DescriptografouCesar.png"));
+            } catch (IOException ex) {
+                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            iconImagem = new ImageIcon("DescriptografouCesar.png");
+            lblImagem.setIcon(iconImagem);
+            System.out.print("Final Descriptografia");
         }
     }//GEN-LAST:event_btnCifraDeCesarActionPerformed
     private void btnSDesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSDesActionPerformed
@@ -278,16 +322,21 @@ public class Inicio extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Inicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Inicio.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Inicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Inicio.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Inicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Inicio.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Inicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Inicio.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
