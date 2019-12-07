@@ -38,10 +38,11 @@ public class Inicio extends javax.swing.JFrame {
     Random gerador = new Random();
     Color color;
     int randomico;
+    int randomicoSDES;
     File fileImagem;
     ImageIcon iconImagem;
-
     Raster rasterImagem;
+    
 
     /**
      * Creates new form Inicio
@@ -184,6 +185,7 @@ public class Inicio extends javax.swing.JFrame {
             iconImagem = new ImageIcon(fileChooser.getSelectedFile().getPath());
             fileImagem = new File(fileChooser.getSelectedFile().getPath());
             randomico = gerador.nextInt(254) + 1;
+            randomicoSDES = gerador.nextInt(510) + 513;
             lblImagem.setIcon(iconImagem);
         }
     }//GEN-LAST:event_btnCarregarArquivoActionPerformed
@@ -375,17 +377,97 @@ public class Inicio extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCifraDeCesarActionPerformed
     private void btnSDesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSDesActionPerformed
-        if (flagSDES) {
+    if (flagSDES) {
             //Criptografar 
             btnCifraDeCesar.setEnabled(false);
             btnCifraXOR.setEnabled(false);
             flagSDES = false;
+           // System.out.println(randomicoSDES);
+           
+            int chaveK = devolveP10(randomicoSDES);
+            String chave = Integer.toBinaryString(chaveK);
+            
+            String rotacao1 = ls(chave.substring(0, 5));
+            String rotacao2 = ls(chave.substring(5, 10));
+            
+
+            int ls1 = Integer.parseInt(rotacao1);
+            int ls2 =Integer.parseInt(rotacao2);
+            
+            
+            int K1 = devolveP8(Integer.parseInt(ls1+""+ls2));
+            
+            rotacao1 = ls(chave.substring(0, 5));
+            rotacao1 = ls(rotacao1);
+            rotacao2 = ls(chave.substring(5, 10));
+            rotacao2 = ls(rotacao2);
+            
+            ls1 = Integer.parseInt(rotacao1);
+            ls2 =Integer.parseInt(rotacao2);
+            
+            
+            int K2 = devolveP8(Integer.parseInt(ls1+""+ls2));
+            
+
+            try {
+             bufferImagem = ImageIO.read(fileImagem);
+             for (int i = 0; i < bufferImagem.getWidth(); i++) {
+             for (int j = 0; j < bufferImagem.getHeight(); j++) {
+             color = new Color(bufferImagem.getRGB(i, j));
+
+             
+             
+             
+             
+             String r = Integer.toBinaryString(color.getRed());
+
+             String g = Integer.toBinaryString(color.getGreen());
+             
+             String b = Integer.toBinaryString(color.getBlue());
+
+             String red = String.format("%08d", Integer.parseInt(r));
+             String green = String.format("%08d", Integer.parseInt(g));
+             String blue = String.format("%08d", Integer.parseInt(b));
+
+             String IPr = devolveIP((red));
+             String IPg = devolveIP((green));
+             String IPb = devolveIP((blue));
+             
+             
+             
+            
+             String R1 = F(IPr.substring(0, 3), IPr.substring(3, 7), K1)+"";
+             int R2 = F(R1.substring(0, 4), R1.substring(4, 7), K2);
+             int R = Integer.parseInt(devolveIP1(R2+""));
+             
+             String G1 = F(IPg.substring(0, 3), IPg.substring(3, 7), K1)+"";
+             int G2 = F(G1.substring(0, 4), G1.substring(4, 8), K2);
+             int G = Integer.parseInt(devolveIP1(G2+""));
+             
+             String B1 = F(IPb.substring(0, 3), IPb.substring(3, 7), K1)+"";
+             int B2 = F(B1.substring(0, 4), B1.substring(4, 8), K2);
+             int B = Integer.parseInt(devolveIP1(B2+""));
+
+             
+             
+             
+             
+             
+
+            bufferImagem.setRGB(i, j, new Color(R,G,B).getRGB());
+             }
+             }
+             } catch (IOException ex) {
+             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+             }
+
         } else {
             //Desincriptografar
             btnCifraDeCesar.setEnabled(true);
             btnCifraXOR.setEnabled(true);
             flagSDES = true;
         }
+       
     }//GEN-LAST:event_btnSDesActionPerformed
     /**
      * @param args the command line arguments
@@ -426,6 +508,193 @@ public class Inicio extends javax.swing.JFrame {
             }
         });
     }
+    
+    public int devolveP10(int randomico) {
+
+        String binario = Integer.toBinaryString(randomico);
+        
+        //System.out.println(binario);
+        
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append(binario.charAt(2));
+        sb.append(binario.charAt(4));
+        sb.append(binario.charAt(1));
+        sb.append(binario.charAt(6));
+        sb.append(binario.charAt(3));
+        sb.append(binario.charAt(9));
+        sb.append(binario.charAt(0));
+        sb.append(binario.charAt(8));
+        sb.append(binario.charAt(7));
+        sb.append(binario.charAt(5));
+        
+        String permutacao = sb.substring(0, 10);
+        
+        int permutacaoInt = Integer.parseInt(permutacao);
+      
+        return permutacaoInt;
+    }
+    public int devolveP8(int randomico) {
+
+        String binario = Integer.toBinaryString(randomico);
+        
+        //System.out.println(binario);
+        
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append(binario.charAt(5));
+        sb.append(binario.charAt(2));
+        sb.append(binario.charAt(6));
+        sb.append(binario.charAt(3));
+        sb.append(binario.charAt(7));
+        sb.append(binario.charAt(4));
+        sb.append(binario.charAt(9));
+        sb.append(binario.charAt(8));
+        
+        String permutacao = sb.substring(0, 8);
+        
+        int permutacaoInt = Integer.parseInt(permutacao);
+      
+        return permutacaoInt;
+    } 
+    
+     public String devolveIP(String cor) {
+
+        String binario = cor;
+        
+        //System.out.println(binario);
+        
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append(binario.charAt(1));
+        sb.append(binario.charAt(5));
+        sb.append(binario.charAt(2));
+        sb.append(binario.charAt(0));
+        sb.append(binario.charAt(3));
+        sb.append(binario.charAt(7));
+        sb.append(binario.charAt(4));
+        sb.append(binario.charAt(6));
+        
+        String permutacao = sb.substring(0, 8);
+        
+      
+        return permutacao;
+    } 
+     
+     public String devolveIP1(String cor) {
+
+        String binario = cor;
+        
+        //System.out.println(binario);
+        
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append(binario.charAt(4));
+        sb.append(binario.charAt(1));
+        sb.append(binario.charAt(3));
+        sb.append(binario.charAt(5));
+        sb.append(binario.charAt(7));
+        sb.append(binario.charAt(2));
+        sb.append(binario.charAt(8));
+        sb.append(binario.charAt(6));
+        
+        String permutacao = sb.substring(0, 8);
+        
+      
+        return permutacao;
+    } 
+     
+     public String devolveEP(String randomico) {
+
+        String binario = randomico;
+        System.out.println("Devolve string: ");
+        System.out.println(binario);
+        
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append(binario.charAt(3));
+        sb.append(binario.charAt(0));
+        sb.append(binario.charAt(1));
+        sb.append(binario.charAt(2));
+        sb.append(binario.charAt(1));
+        sb.append(binario.charAt(2));
+        sb.append(binario.charAt(3));
+        sb.append(binario.charAt(0));
+        
+        String permutacao = sb.substring(0, 7);
+        
+      
+        return permutacao;
+    } 
+     
+     public int devolveP4(int randomico) {
+
+        String binario = randomico+"";
+        
+        //System.out.println(binario);
+        
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append(binario.charAt(2));
+        sb.append(binario.charAt(4));
+        sb.append(binario.charAt(3));
+        sb.append(binario.charAt(1));
+       
+        
+        String permutacao = sb.substring(0, 4);
+        
+        int permutacaoInt = Integer.parseInt(permutacao);
+      
+        return permutacaoInt;
+    } 
+    
+    public String ls(String txt) {
+        
+        String primeiro = txt.charAt(0) + "";
+        String ls = txt.substring(0,4)+primeiro;
+        
+        
+        return ls;
+    }
+    
+    public int F(String txt1, String txt2, int k) {
+     String EP = devolveEP(txt2);
+     int teste = Integer.parseInt(EP);
+     EP = Integer.toBinaryString(teste);
+     String chave = Integer.toBinaryString(k);
+     int xorEP = Integer.parseInt(EP) ^ Integer.parseInt(chave);
+     
+     String s0 = (xorEP+"").substring(0,3);
+     String s1 = (xorEP+"").substring(3,7);  
+     
+     System.out.println(s0);
+     System.out.println(s1);
+     
+     int ms0 [][] = {{1,0,3,2},{3,2,1,0},{0,2,1,3},{3,1,3,2}};
+     int ms1 [][] = {{0,1,2,3},{2,0,1,3},{3,0,1,0},{2,1,0,3}};
+     
+     int linha0 = Integer.parseInt(s0.charAt(0)+""+s0.charAt(3),10);
+     int coluna0 = Integer.parseInt(s0.charAt(1)+""+s0.charAt(2),10);
+     int linha1 = Integer.parseInt(s1.charAt(0)+""+s1.charAt(3),10);
+     int coluna1 = Integer.parseInt(s1.charAt(1)+""+s1.charAt(2),10);
+     
+     String numero0 = Integer.toBinaryString(ms0[linha0][coluna0]);
+     String numero1 = Integer.toBinaryString(ms1[linha1][coluna1]);
+     
+     int numeroResultante = Integer.parseInt(numero0+""+numero1);
+     
+     int p4 = devolveP4(numeroResultante);
+     
+     int xorP4 = Integer.parseInt(txt1) ^ p4;
+     
+     
+     int sw = Integer.parseInt(txt2+""+xorP4);
+
+     
+     
+        return sw;
+    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCarregarArquivo;
