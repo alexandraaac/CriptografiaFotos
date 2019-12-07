@@ -183,7 +183,7 @@ public class Inicio extends javax.swing.JFrame {
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             iconImagem = new ImageIcon(fileChooser.getSelectedFile().getPath());
             fileImagem = new File(fileChooser.getSelectedFile().getPath());
-            randomico = gerador.nextInt(255) + 1;
+            randomico = gerador.nextInt(254) + 1;
             lblImagem.setIcon(iconImagem);
         }
     }//GEN-LAST:event_btnCarregarArquivoActionPerformed
@@ -195,11 +195,85 @@ public class Inicio extends javax.swing.JFrame {
             btnSDes.setEnabled(false);
             flagCifraXOR = false;
             
+            System.out.println(randomico);
+            try {
+                bufferImagem = ImageIO.read(fileImagem);
+                for (int i = 0; i < bufferImagem.getWidth(); i++) {
+                    for (int j = 0; j < bufferImagem.getHeight(); j++) {
+                        color = new Color(bufferImagem.getRGB(i, j));
+
+                        int red = color.getRed() ^ randomico;    //R
+                        int green = color.getGreen() ^ randomico;  //G
+                        int blue = color.getBlue() ^ randomico;   //B
+                        if (red > 255) {
+                            red = red % 256;
+                        }
+                        if (green > 255) {
+                            green = green % 256;
+                        }
+                        if (blue > 255) {
+                            blue = blue % 256;
+                        }
+                        bufferImagem.setRGB(i, j, new Color(red, green, blue).getRGB());
+                    }
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            // System.out.println(bufferImagem);
+            try {
+                ImageIO.write(bufferImagem, "PNG", new File("CriptografouXOR.png"));
+            } catch (IOException ex) {
+                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            iconImagem = new ImageIcon("CriptografouXOR.png");
+            lblImagem.setIcon(iconImagem);
+            System.out.println("Final Criptografia");
+            
         } else {
             //Desincriptografar
             btnCifraDeCesar.setEnabled(true);
             btnSDes.setEnabled(true);
             flagCifraXOR = true;
+             try {
+                fileImagem = new File("CriptografouXOR.png");
+                bufferImagem = ImageIO.read(fileImagem);
+                for (int i = 0; i < bufferImagem.getWidth(); i++) {
+                    for (int j = 0; j < bufferImagem.getHeight(); j++) {
+                        color = new Color(bufferImagem.getRGB(i, j));
+
+                        int red = color.getRed() ^ randomico;    //R
+                        int green = color.getGreen() ^ randomico;  //G
+                        int blue = color.getBlue() ^ randomico;
+
+                        if (red < 0) {
+                            red = red + 255;
+                        }
+                        if (green < 0) {
+                            green = green + 255;
+                        }
+                        if (blue < 0) {
+                            blue = blue + 255;
+                        }
+
+                        bufferImagem.setRGB(i, j, new Color(red, green, blue).getRGB());
+
+                    }
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            // System.out.println(bufferImagem);
+            try {
+                ImageIO.write(bufferImagem, "PNG", new File("DescriptografouXOR.png"));
+            } catch (IOException ex) {
+                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            iconImagem = new ImageIcon("DescriptografouXOR.png");
+            lblImagem.setIcon(iconImagem);
+            System.out.print("Final Descriptografia");
         }
     }//GEN-LAST:event_btnCifraXORActionPerformed
 
@@ -222,13 +296,13 @@ public class Inicio extends javax.swing.JFrame {
                         int green = color.getGreen() + randomico;  //G
                         int blue = color.getBlue() + randomico;   //B
                         if (red > 255) {
-                            red = red % 255;
+                            red = red % 256;
                         }
                         if (green > 255) {
-                            green = green % 255;
+                            green = green % 256;
                         }
                         if (blue > 255) {
-                            blue = blue % 255;
+                            blue = blue % 256;
                         }
                         bufferImagem.setRGB(i, j, new Color(red, green, blue).getRGB());
                     }
