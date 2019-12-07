@@ -189,7 +189,10 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCarregarArquivoActionPerformed
 
     private void btnCifraXORActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCifraXORActionPerformed
+         File fileImagem1 =  fileImagem ;
+
         if (flagCifraXOR) {
+           
             //Criptografar 
             btnCifraDeCesar.setEnabled(false);
             btnSDes.setEnabled(false);
@@ -197,7 +200,7 @@ public class Inicio extends javax.swing.JFrame {
             
             System.out.println(randomico);
             try {
-                bufferImagem = ImageIO.read(fileImagem);
+                bufferImagem = ImageIO.read(fileImagem1);
                 for (int i = 0; i < bufferImagem.getWidth(); i++) {
                     for (int j = 0; j < bufferImagem.getHeight(); j++) {
                         color = new Color(bufferImagem.getRGB(i, j));
@@ -222,12 +225,12 @@ public class Inicio extends javax.swing.JFrame {
             }
             // System.out.println(bufferImagem);
             try {
-                ImageIO.write(bufferImagem, "PNG", new File("CriptografouXOR.png"));
+                ImageIO.write(bufferImagem, "PNG", new File("Criptografia.png"));
             } catch (IOException ex) {
                 Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            iconImagem = new ImageIcon("CriptografouXOR.png");
+            iconImagem = new ImageIcon("Criptografia.png");
             lblImagem.setIcon(iconImagem);
             System.out.println("Final Criptografia");
             
@@ -237,8 +240,8 @@ public class Inicio extends javax.swing.JFrame {
             btnSDes.setEnabled(true);
             flagCifraXOR = true;
              try {
-                fileImagem = new File("CriptografouXOR.png");
-                bufferImagem = ImageIO.read(fileImagem);
+                fileImagem1 = new File("Criptografia.png");
+                bufferImagem = ImageIO.read(fileImagem1);
                 for (int i = 0; i < bufferImagem.getWidth(); i++) {
                     for (int j = 0; j < bufferImagem.getHeight(); j++) {
                         color = new Color(bufferImagem.getRGB(i, j));
@@ -266,18 +269,22 @@ public class Inicio extends javax.swing.JFrame {
             }
             // System.out.println(bufferImagem);
             try {
-                ImageIO.write(bufferImagem, "PNG", new File("DescriptografouXOR.png"));
+                ImageIO.write(bufferImagem, "PNG", new File("Criptografia.png"));
             } catch (IOException ex) {
                 Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            iconImagem = new ImageIcon("DescriptografouXOR.png");
+            
+            
+            iconImagem = new ImageIcon("Criptografia.png");
             lblImagem.setIcon(iconImagem);
             System.out.print("Final Descriptografia");
         }
     }//GEN-LAST:event_btnCifraXORActionPerformed
 
     private void btnCifraDeCesarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCifraDeCesarActionPerformed
+
+         File fileImagem2 =  fileImagem ;
 
         if (flagCifraCesar) {
             //Criptografar
@@ -287,7 +294,7 @@ public class Inicio extends javax.swing.JFrame {
 
             System.out.println(randomico);
             try {
-                bufferImagem = ImageIO.read(fileImagem);
+                bufferImagem = ImageIO.read(fileImagem2);
                 for (int i = 0; i < bufferImagem.getWidth(); i++) {
                     for (int j = 0; j < bufferImagem.getHeight(); j++) {
                         color = new Color(bufferImagem.getRGB(i, j));
@@ -312,12 +319,12 @@ public class Inicio extends javax.swing.JFrame {
             }
             // System.out.println(bufferImagem);
             try {
-                ImageIO.write(bufferImagem, "PNG", new File("CriptografouCesar.png"));
+                ImageIO.write(bufferImagem, "PNG", new File("Criptografia.png"));
             } catch (IOException ex) {
                 Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            iconImagem = new ImageIcon("CriptografouCesar.png");
+            iconImagem = new ImageIcon("Criptografia.png");
             lblImagem.setIcon(iconImagem);
             System.out.println("Final Criptografia");
 
@@ -328,8 +335,8 @@ public class Inicio extends javax.swing.JFrame {
             flagCifraCesar = true;
 
             try {
-                fileImagem = new File("CriptografouCesar.png");
-                bufferImagem = ImageIO.read(fileImagem);
+                fileImagem2 = new File("Criptografia.png");
+                bufferImagem = ImageIO.read(fileImagem2);
                 for (int i = 0; i < bufferImagem.getWidth(); i++) {
                     for (int j = 0; j < bufferImagem.getHeight(); j++) {
                         color = new Color(bufferImagem.getRGB(i, j));
@@ -357,12 +364,12 @@ public class Inicio extends javax.swing.JFrame {
             }
             // System.out.println(bufferImagem);
             try {
-                ImageIO.write(bufferImagem, "PNG", new File("DescriptografouCesar.png"));
+                ImageIO.write(bufferImagem, "PNG", new File("Criptografia.png"));
             } catch (IOException ex) {
                 Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            iconImagem = new ImageIcon("DescriptografouCesar.png");
+            iconImagem = new ImageIcon("Criptografia.png");
             lblImagem.setIcon(iconImagem);
             System.out.print("Final Descriptografia");
         }
