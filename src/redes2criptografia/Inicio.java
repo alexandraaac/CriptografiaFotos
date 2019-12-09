@@ -42,6 +42,8 @@ public class Inicio extends javax.swing.JFrame {
     File fileImagem;
     ImageIcon iconImagem;
     Raster rasterImagem;
+    String K1;
+    String K2;
     
 
     /**
@@ -377,7 +379,10 @@ public class Inicio extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCifraDeCesarActionPerformed
     private void btnSDesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSDesActionPerformed
-    if (flagSDES) {
+   
+        
+         File fileImagem3 =  fileImagem ;
+        if (flagSDES) {
             //Criptografar 
             btnCifraDeCesar.setEnabled(false);
             btnCifraXOR.setEnabled(false);
@@ -391,14 +396,14 @@ public class Inicio extends javax.swing.JFrame {
             String rotacao2 = ls(chaveK.substring(5, 10));
             //rotacao ls de 10 para k1 ok
             
-            String K1 = devolveP8(Integer.parseInt(rotacao1+""+rotacao2));
+            K1 = devolveP8(Integer.parseInt(rotacao1+""+rotacao2));
             //PERMUTACAO DE 10 PARA 8 para k1 OK
 
             rotacao1 = ls(rotacao1.substring(0, 5));
             rotacao2 = ls(rotacao2.substring(0, 5));
              //rotacao ls de 10 para k2 ok
              
-            String K2 = devolveP8(Integer.parseInt(rotacao1+""+rotacao2));
+            K2 = devolveP8(Integer.parseInt(rotacao1+""+rotacao2));
             //PERMUTACAO DE 10 PARA 8 para k2 OK
             
             
@@ -438,15 +443,15 @@ public class Inicio extends javax.swing.JFrame {
              
              String R1 = F(IPr.substring(0, 4), IPr.substring(4, 8), K1);
              String R2 = F(R1.substring(0, 4), R1.substring(4, 8), K2);
-             int R = Integer.parseInt(devolveIP1(R2+""));
+             String R = devolveIP1(R2);
              
              String G1 = F(IPg.substring(0, 4), IPg.substring(4, 8), K1);
              String G2 = F(G1.substring(0, 4), G1.substring(4, 8), K2);
-             int G = Integer.parseInt(devolveIP1(G2+""));
+             String G = devolveIP1(G2);
              
-             String B1 = F(IPb.substring(0, 8), IPb.substring(4, 8), K1);
+             String B1 = F(IPb.substring(0, 4), IPb.substring(4, 8), K1);
              String B2 = F(B1.substring(0, 4), B1.substring(4, 8), K2);
-             int B = Integer.parseInt(devolveIP1(B2+""));
+             String B = devolveIP1(B2);
 
              
              
@@ -454,17 +459,119 @@ public class Inicio extends javax.swing.JFrame {
              
              
 
-            bufferImagem.setRGB(i, j, new Color(R,G,B).getRGB());
+            bufferImagem.setRGB(i, j, new Color(Integer.parseInt(R,2),Integer.parseInt(G,2),Integer.parseInt(B,2)).getRGB());
              }
              }
              } catch (IOException ex) {
              Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
              }
+            try {
+                ImageIO.write(bufferImagem, "PNG", new File("CriptografouSDES.png"));
+            } catch (IOException ex) {
+                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            iconImagem = new ImageIcon("CriptografouSDES.png");
+            lblImagem.setIcon(iconImagem);
+            System.out.println("Final Criptografia");
+            
         } else {
             //Desincriptografar
             btnCifraDeCesar.setEnabled(true);
             btnCifraXOR.setEnabled(true);
             flagSDES = true;
+            //Criptografar 
+            btnCifraDeCesar.setEnabled(false);
+            btnCifraXOR.setEnabled(false);
+            flagSDES = false;
+           
+            String chaveK = devolveP10(randomicoSDES);
+            //Gera chave randomica de 10 bits ok
+
+            
+            String rotacao1 = ls(chaveK.substring(0, 5));
+            String rotacao2 = ls(chaveK.substring(5, 10));
+            //rotacao ls de 10 para k1 ok
+            
+            //PERMUTACAO DE 10 PARA 8 para k1 OK
+
+           
+             //rotacao ls de 10 para k2 ok
+             
+            //PERMUTACAO DE 10 PARA 8 para k2 OK
+            
+            
+            
+
+            try {
+                fileImagem3 = new File("CriptografouSDES.png");
+                bufferImagem = ImageIO.read(fileImagem3);       
+                
+                for (int i = 0; i < bufferImagem.getWidth(); i++) {
+             for (int j = 0; j < bufferImagem.getHeight(); j++) {
+             color = new Color(bufferImagem.getRGB(i, j));
+
+             
+             
+             
+             //pega cor vermelha em binario
+             String r = Integer.toBinaryString(color.getRed());
+             //pega cor verde em binario
+             String g = Integer.toBinaryString(color.getGreen());        
+             //pega cor azul em binario  
+             String b = Integer.toBinaryString(color.getBlue());
+
+             //transforma cor vermelha para 8 bits
+             String red = String.format("%08d", Integer.parseInt(r));
+             //transforma cor verde para 8 bits
+             String green = String.format("%08d", Integer.parseInt(g));
+             //transforma cor azul para 8 bits
+             String blue = String.format("%08d", Integer.parseInt(b));
+
+             //permuta cor vermelha
+             String IPr = devolveIP((red));
+             //permuta cor verde
+             String IPg = devolveIP((green));
+             //permuta cor azul
+             String IPb = devolveIP((blue));
+             
+             
+             
+             String R1 = F(IPr.substring(0, 4), IPr.substring(4, 8), K2);
+             String R2 = F(R1.substring(0, 4), R1.substring(4, 8), K1);
+             String R = devolveIP1(R2);
+             
+             String G1 = F(IPg.substring(0, 4), IPg.substring(4, 8), K2);
+             String G2 = F(G1.substring(0, 4), G1.substring(4, 8), K1);
+             String G = devolveIP1(G2);
+             
+             String B1 = F(IPb.substring(0, 4), IPb.substring(4, 8), K2);
+             String B2 = F(B1.substring(0, 4), B1.substring(4, 8), K1);
+             String B = devolveIP1(B2);
+
+             
+             
+             
+             
+             
+
+            bufferImagem.setRGB(i, j, new Color(Integer.parseInt(R,2),Integer.parseInt(G,2),Integer.parseInt(B,2)).getRGB());
+             }
+             }
+             } catch (IOException ex) {
+             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+             }
+            try {
+                ImageIO.write(bufferImagem, "PNG", new File("DescriptografouSDES.png"));
+            } catch (IOException ex) {
+                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            iconImagem = new ImageIcon("DescriptografouSDES.png");
+            lblImagem.setIcon(iconImagem);
+            System.out.println("Final Criptografia");
+            
+            
         }
        
     }//GEN-LAST:event_btnSDesActionPerformed
@@ -626,18 +733,17 @@ public class Inicio extends javax.swing.JFrame {
          
         String binario = randomico;
         
-        
         StringBuilder sb = new StringBuilder();
         
-        sb.append(binario.charAt(2));
-        sb.append(binario.charAt(4));
-        sb.append(binario.charAt(3));
         sb.append(binario.charAt(1));
+        sb.append(binario.charAt(3));
+        sb.append(binario.charAt(2));
+        sb.append(binario.charAt(0));
        
         
-        String permutacao = sb.substring(0, 3);
+        String permutacao = sb.substring(0, 4);
         
-      
+
         return permutacao;
     } 
     
@@ -698,16 +804,18 @@ public class Inicio extends javax.swing.JFrame {
      String numeroResultante = (String.format("%02d", Integer.parseInt(numero0))+""+String.format("%02d", Integer.parseInt(numero1)));
      
 
-     
      String p4 = devolveP4(numeroResultante);
-     
+          
      int xorP4 = Integer.parseInt(txt1,2) ^ Integer.parseInt(p4,2);
-     
-     
-     String xorp4Binario = Integer.toBinaryString(xorP4);
 
-     String sw = String.format("%04d", Integer.parseInt(txt2))+""+String.format("%04d", Integer.parseInt(xorp4Binario));
+     String xorp4Binario = Integer.toBinaryString(xorP4);
      
+     //System.out.println(xorP4);
+
+     String sw = String.format("%04d", Integer.parseInt(xorp4Binario))+""+String.format("%04d", Integer.parseInt(txt2));
+     
+     
+
      return sw;
     }
     
