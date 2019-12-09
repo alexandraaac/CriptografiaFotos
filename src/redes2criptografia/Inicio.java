@@ -437,7 +437,7 @@ public class Inicio extends javax.swing.JFrame {
              
              
              String R1 = F(IPr.substring(0, 4), IPr.substring(4, 8), K1);
-/*             String R2 = F(R1.substring(0, 4), R1.substring(4, 8), K2);
+             String R2 = F(R1.substring(0, 4), R1.substring(4, 8), K2);
              int R = Integer.parseInt(devolveIP1(R2+""));
              
              String G1 = F(IPg.substring(0, 4), IPg.substring(4, 8), K1);
@@ -454,7 +454,7 @@ public class Inicio extends javax.swing.JFrame {
              
              
 
-            bufferImagem.setRGB(i, j, new Color(R,G,B).getRGB());*/
+            bufferImagem.setRGB(i, j, new Color(R,G,B).getRGB());
              }
              }
              } catch (IOException ex) {
@@ -585,14 +585,14 @@ public class Inicio extends javax.swing.JFrame {
         
         StringBuilder sb = new StringBuilder();
         
-        sb.append(binario.charAt(4));
-        sb.append(binario.charAt(1));
         sb.append(binario.charAt(3));
-        sb.append(binario.charAt(5));
-        sb.append(binario.charAt(7));
+        sb.append(binario.charAt(0));
         sb.append(binario.charAt(2));
-        sb.append(binario.charAt(8));
+        sb.append(binario.charAt(4));
         sb.append(binario.charAt(6));
+        sb.append(binario.charAt(1));
+        sb.append(binario.charAt(7));
+        sb.append(binario.charAt(5));
         
         String permutacao = sb.substring(0, 8);
         
@@ -621,11 +621,11 @@ public class Inicio extends javax.swing.JFrame {
         return permutacao;
     } 
      
-     public String devolveP4(int randomico) {
+     public String devolveP4(String randomico) {
 
-        String binario = randomico+"";
+         
+        String binario = randomico;
         
-        //System.out.println(binario);
         
         StringBuilder sb = new StringBuilder();
         
@@ -635,7 +635,7 @@ public class Inicio extends javax.swing.JFrame {
         sb.append(binario.charAt(1));
        
         
-        String permutacao = sb.substring(0, 4);
+        String permutacao = sb.substring(0, 3);
         
       
         return permutacao;
@@ -658,49 +658,57 @@ public class Inicio extends javax.swing.JFrame {
      int EP = Integer.parseInt(EP8);
      
      //faz xor de ep com k
-     int xorEP = EP ^ Integer.parseInt(k);
+     int EPxorK = Integer.parseInt(EP8, 2) ^ Integer.parseInt(k, 2);
      
-     String xor = String.format("%08d", xorEP);
-     System.out.println(xor);
+     String xorBinario = Integer.toBinaryString(EPxorK);
+     String xor = String.format("%08d", Integer.parseInt(xorBinario));
+
+
      //divide xor em dois
-     /*
+     
      String xor0 = (xor).substring(0,4);
      String xor1 = (xor).substring(4,8);  
      
      String s0linha = xor0.charAt(0)+""+xor0.charAt(3);
-     System.out.print(s0linha);
      String s0coluna = xor0.charAt(1)+""+xor0.charAt(2);
-     System.out.print(s0coluna);
-     /*
+     
      
      String s1linha = xor1.charAt(0)+""+xor1.charAt(3);
      String s1coluna = xor1.charAt(1)+""+xor1.charAt(2);
+
 
      
      int ms0 [][] = {{1,0,3,2},{3,2,1,0},{0,2,1,3},{3,1,3,2}};
      int ms1 [][] = {{0,1,2,3},{2,0,1,3},{3,0,1,0},{2,1,0,3}};
      
-     int linha0 = Integer.parseInt(s0linha,10);
-     int coluna0 = Integer.parseInt(s0coluna,10);
+     int linha0 = Integer.parseInt(s0linha,2);
+     int coluna0 = Integer.parseInt(s0coluna,2);
      
-     int linha1 = Integer.parseInt(s1linha,10);
-     int coluna1 = Integer.parseInt(s1coluna,10);
-     /*
+     int linha1 = Integer.parseInt(s1linha,2);
+     int coluna1 = Integer.parseInt(s1coluna,2);
+     
+   
+     
+     
      String numero0 = Integer.toBinaryString(ms0[linha0][coluna0]);
      String numero1 = Integer.toBinaryString(ms1[linha1][coluna1]);
+
+
      
-     int numeroResultante = Integer.parseInt(numero0+""+numero1);
+     String numeroResultante = (String.format("%02d", Integer.parseInt(numero0))+""+String.format("%02d", Integer.parseInt(numero1)));
+     
+
      
      String p4 = devolveP4(numeroResultante);
      
-     int xorP4 = Integer.parseInt(txt1) ^ Integer.parseInt(p4);
-     
-     */
-     //String sw = txt2+""+xorP4;
-     String sw = "";
+     int xorP4 = Integer.parseInt(txt1,2) ^ Integer.parseInt(p4,2);
      
      
-        return sw;
+     String xorp4Binario = Integer.toBinaryString(xorP4);
+
+     String sw = String.format("%04d", Integer.parseInt(txt2))+""+String.format("%04d", Integer.parseInt(xorp4Binario));
+     
+     return sw;
     }
     
 
