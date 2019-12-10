@@ -480,10 +480,6 @@ public class Inicio extends javax.swing.JFrame {
             btnCifraDeCesar.setEnabled(true);
             btnCifraXOR.setEnabled(true);
             flagSDES = true;
-            //Criptografar 
-            btnCifraDeCesar.setEnabled(false);
-            btnCifraXOR.setEnabled(false);
-            flagSDES = false;
            
             String chaveK = devolveP10(randomicoSDES);
             //Gera chave randomica de 10 bits ok
